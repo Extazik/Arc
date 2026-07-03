@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Streaming Payments on Arc</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background: #0052ff; color: white; padding: 10px 20px; border: none; cursor: pointer; margin: 5px; }
+        button:hover { background: #0040cc; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #result { margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px; display: none; }
+        .wallet-section { background: #e8f0fe; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
+        .notification { position: fixed; top: 20px; right: 20px; padding: 15px; border-radius: 5px; color: white; display: none; z-index: 1000; }
+        .notification.success { background: #22c55e; }
+        .notification.error { background: #ef4444; }
+        .notification.info { background: #3b82f6; }
+        .progress { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; display: none; }
+        .tabs { display: flex; margin-bottom: 20px; }
+        .tab { padding: 10px 20px; cursor: pointer; border: 1px solid #ccc; border-bottom: none; }
+        .tab.active { background: #0052ff; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <h1>AI Streaming Payments on Arc</h1>
+    <p>Pay for AI usage by the second in real-time with USDC</p>
+    
+    <!-- Wallet Section -->
+    <div class="wallet-section" id="walletSection">
+        <h3>Wallet</h3>
+        <p>Address: <span id="userAddress"></span></p>
+        <p>Balance: <span id="userBalance">Loading...</span></p>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('stream')">Stream Payments</div>
+        <div class="tab" onclick="switchTab('bridge')">Bridge</div>
+        <div class="tab" onclick="switchTab('swap')">Swap</div>
+    </div>
+    
+    <!-- Stream Tab -->
+    <div class="tab-content active" id="streamTab">
+        <div class="form-group">
+            <label>Receiver Address:</label>
+            <input type="text" id="receiver" placeholder="0x..." />
+        </div>
+        
+        <div class="form-group">
+            <label>Amount per Second (USDC, 6 decimals):</label>
+            <input type="number" id="amountPerSecond" placeholder="1000000 for 1 USDC/sec" />
+        </div>
+        
+        <div class="form-group">
+            <label>Duration (seconds):</label>
+            <input type="number" id="durationSeconds" placeholder="3600 for 1 hour" />
+        </div>
+        
+        <button onclick="createStream()">Create Stream</button>
+        <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+    </div>
+    
+    <!-- Bridge Tab -->
+    <div class="tab-content" id="bridgeTab">
+        <div class="form-group">
+            <label>Amount to Bridge:</label>
+            <input type="number" id="bridgeAmount" placeholder="1000000 for 1 USDC" />
+        </div>
+        
+        <div class="form-group">
+            <label>From Chain:</label>
+            <select id="fromChain">
+                <option value="ethereum">Ethereum</option>
+                <option value="polygon">Polygon</option>
+                <option value="avalanche">Avalanche</option>
+                <option value="arbitrum">Arbitrum</option>
+                <option value="optimism">Optimism</option>
+            </select>
+        </div>
+        
+        <button onclick="executeBridge()">Bridge to Arc</button>
+        <div class="progress" id="bridgeProgress"></div>
+    </div>
+    
+    <!-- Swap Tab -->
+    <div class="tab-content" id="swapTab">
+        <div class="form-group">
+            <label>From Token:</label>
+            <input type="text" id="fromToken" placeholder="0x... or symbol" />
+        </div>
+        
+        <div class="form-group">
+            <label>To Token:</label>
+            <input type="text" id="toToken" placeholder="0x... or symbol" />
+        </div>
+        
+        <div class="form-group">
+            <label>Amount:</label>
+            <input type="number" id="swapAmount" placeholder="Amount in minimal units" />
+        </div>
+        
+        <div class="form-group">
+            <label>Slippage (%):</label>
+            <input type="number" id="slippage" value="0.5" step="0.1" />
+        </div>
+        
+        <button onclick="executeSwap()">Swap Tokens</button>
+        <div class="progress" id="swapProgress"></div>
+    </div>
+    
+    <div id="result"></div>
+    
+    <script type="module" src="arc-integration.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
