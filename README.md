@@ -1,3 +1,4 @@
+Cтруктура проекта
 /arc-streaming-app
 - contracts/
 - - StreamingPayment.sol
