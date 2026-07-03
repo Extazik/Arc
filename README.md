@@ -1,3 +1,17 @@
+/arc-streaming-app
+├── contracts/
+│   ├── StreamingPayment.sol
+│   └── Deploy.md
+├── backend/
+│   ├── server.js
+│   └── .env
+├── frontend/
+│   ├── index.html
+│   ├── app.js
+│   └── arc-integration.js  # NEW
+├── package.json
+└── README.md
+
 # Arc Streaming Payments + App Kits
 
 MVP для микроплатежей в реальном времени на Circle Arc с интеграцией Bridge, Swap и Send через App Kits SDK. [web:11][web:14]
